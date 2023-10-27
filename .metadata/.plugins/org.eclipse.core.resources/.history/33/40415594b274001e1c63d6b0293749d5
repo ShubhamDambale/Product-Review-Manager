@@ -1,0 +1,42 @@
+package com.product.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.product.entity.Product;
+import com.product.entity.ProductDTO;
+import com.product.entity.Review;
+import com.product.entity.ReviewDTO;
+
+@Service
+public class DTOConversionService {
+    public ProductDTO convertProductToDTO(Product product) {
+        ProductDTO productDTO = new ProductDTO();
+        // Map attributes from the Product entity to the DTO
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setcDate(product.getcDate());
+        productDTO.setuDate(product.getuDate());
+        // Set reviews
+        productDTO.setReviews(convertReviewsToDTO(product.getReviews()));
+        return productDTO;
+    }
+
+    public List<ReviewDTO> convertReviewsToDTO(List<Review> reviews) {
+        List<ReviewDTO> reviewDTOs = new ArrayList<>();
+        for (Review review : reviews) {
+            ReviewDTO reviewDTO = new ReviewDTO();
+            // Map attributes from the Review entity to the DTO
+            reviewDTO.setId(review.getId());
+            reviewDTO.setUserId(review.getUserId());
+            reviewDTO.setDescription(review.getDescription());
+            reviewDTO.setcDate(review.getcDate());
+            reviewDTO.setuDate(review.getuDate());
+            reviewDTOs.add(reviewDTO);
+        }
+        return reviewDTOs;
+    }
+}

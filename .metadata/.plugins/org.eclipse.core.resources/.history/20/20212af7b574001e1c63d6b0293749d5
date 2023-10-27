@@ -1,0 +1,47 @@
+package com.product.service;
+
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.product.entity.Product;
+import com.product.entity.Review;
+import com.product.exception.ProductNotFoundException;
+import com.product.exception.ReviewNotFoundException;
+import com.product.repository.ProductRepository;
+import com.product.repository.ReviewRepository;
+
+import com.product.entity.Review;
+import com.product.exception.ReviewNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+public class ReviewService {
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    public Review createReview(Long productId, Review review) {
+        Product product = productService.getProductById(productId);
+        review.setProduct(product);
+        review.setcDate(LocalDateTime.now());
+        review.setuDate(null); // Set the update date to null when creating a new review
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(Long reviewId) {
+        Review existingReview = getReviewById(reviewId);
+        reviewRepository.delete(existingReview);
+    }
+
+    public Review getReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with id: " + reviewId));
+    }
+}
